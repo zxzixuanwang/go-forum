@@ -1,0 +1,17 @@
+logging:
+  console:
+    enabled: true
+    level: debug
+    al: info
+  file:
+    enabled: true
+    level: info
+    path: /tmp/output/forum-gateway/
+    name: /tmp/output/forum-gateway//app.log
+    maxHistory: 7
+    maxSizeMb: 10
+
+service:
+  env: test
+  port: :8000
+  name: forum-gateway
