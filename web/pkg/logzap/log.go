@@ -17,17 +17,17 @@ func GetLogger() *zap.SugaredLogger {
 }
 
 type LogConfig struct {
-	console console
-	file    file
+	Console Console
+	File    File
 }
 
-type console struct {
+type Console struct {
 	Enabled bool   `json:"enabled"`
 	Level   string `json:"level"`
 	Al      string `json:"al"`
 }
 
-type file struct {
+type File struct {
 	Enabled    bool   `json:"enabled"`
 	Level      string `json:"level"`
 	Path       string `json:"path"`
@@ -39,10 +39,10 @@ type file struct {
 func LogInit(lc *LogConfig) {
 
 	var zapcores []zapcore.Core
-	if lc.console.Enabled {
+	if lc.Console.Enabled {
 		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 		consoleLevel := new(zapcore.Level)
-		if err := consoleLevel.UnmarshalText([]byte(lc.console.Level)); err != nil {
+		if err := consoleLevel.UnmarshalText([]byte(lc.Console.Level)); err != nil {
 			panic(err)
 		}
 		zapcores = append(
@@ -54,16 +54,16 @@ func LogInit(lc *LogConfig) {
 			),
 		)
 	}
-	if lc.file.Enabled {
+	if lc.File.Enabled {
 		fileEncoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
 		fileLevel := new(zapcore.Level)
-		if err := fileLevel.UnmarshalText([]byte(lc.file.Level)); err != nil {
+		if err := fileLevel.UnmarshalText([]byte(lc.File.Level)); err != nil {
 			panic(err)
 		}
 		w := &lumberjack.Logger{
-			Filename:   lc.file.Name,
-			MaxSize:    lc.file.MaxSizeMb,
-			MaxBackups: lc.file.MaxHistory,
+			Filename:   lc.File.Name,
+			MaxSize:    lc.File.MaxSizeMb,
+			MaxBackups: lc.File.MaxHistory,
 		}
 		zapcores = append(
 			zapcores,
